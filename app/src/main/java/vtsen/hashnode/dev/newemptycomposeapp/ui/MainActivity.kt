@@ -18,39 +18,53 @@ package vtsen.hashnode.dev.newemptycomposeapp.ui
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import vtsen.hashnode.dev.newemptycomposeapp.ui.screens.MainScreen
-import vtsen.hashnode.dev.newemptycomposeapp.ui.theme.NewEmptyComposeAppTheme
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        setupSplashScreen()
-
         super.onCreate(savedInstanceState)
-
         setContent {
-            NewEmptyComposeAppTheme {
-                MainScreen()
+            // Un contenedor básico con el tema de Material Design
+            MaterialTheme {
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    PantallaPrueba()
+                }
             }
         }
     }
+}
 
-    private fun setupSplashScreen() {
-        var keepSplashScreenOn = true
-        lifecycleScope.launch {
-            lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                delay(2000)
-                keepSplashScreenOn = false
-            }
-        }
+// Esta anotación le dice a Kotlin que esta función "dibuja" interfaz gráfica
+@Composable
+fun PantallaPrueba() {
+    // Variables de estado: Si esta variable cambia, la interfaz se actualiza sola
+    var mensaje by remember { mutableStateOf("Esperando confirmación...") }
 
-        installSplashScreen().setKeepOnScreenCondition {
-            keepSplashScreenOn
+    // Column organiza los elementos verticalmente, como una lista
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(
+            text = mensaje,
+            style = MaterialTheme.typography.titleLarge
+        )
+
+        Spacer(modifier = Modifier.height(24.dp)) // Espacio vacío
+
+        Button(onClick = {
+            mensaje = "¡Jetpack Compose y compilación en la nube funcionando! 🎉"
+        }) {
+            Text("Probar Aplicación")
         }
     }
 }

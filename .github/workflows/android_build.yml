@@ -1,0 +1,32 @@
+name: Compilar APK de Android
+
+# El proceso se activará cada vez que subas cambios (push) a la rama principal
+on:
+  push:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest # GitHub te presta una computadora virtual con Linux
+
+    steps:
+      - name: Descargar el código del repositorio
+        uses: actions/checkout@v4
+
+      - name: Configurar Java (JDK 17)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      - name: Otorgar permisos de ejecución a Gradle
+        run: chmod +x gradlew
+
+      - name: Compilar la aplicación (Generar APK)
+        run: ./gradlew assembleDebug
+
+      - name: Guardar el archivo APK resultante
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-debug.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
